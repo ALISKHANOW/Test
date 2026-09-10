@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детский Мир - Магазин детской одежды</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 15px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .cart-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ff6b6b;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .filters select {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-name {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-category {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .add-to-cart:hover {
+            opacity: 0.9;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            font-size: 2em;
+            cursor: pointer;
+            color: #ff6b6b;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+            color: #667eea;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🧸 Детский Мир</h1>
+        <p>Лучшая одежда для ваших малышей</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#" onclick="filterProducts('all')">Все товары</a></li>
+            <li><a href="#" onclick="filterProducts('boys')">Для мальчиков</a></li>
+            <li><a href="#" onclick="filterProducts('girls')">Для девочек</a></li>
+            <li><a href="#" onclick="filterProducts('babies')">Для малышей</a></li>
+        </ul>
+    </nav>
+
+    <div class="cart-icon" onclick="openCart()">
+        🛒 Корзина (<span id="cart-count">0</span>)
+    </div>
+
+    <div class="container">
+        <div class="filters">
+            <select id="sort-select" onchange="sortProducts()">
+                <option value="default">По умолчанию</option>
+                <option value="price-low">Сначала дешевые</option>
+                <option value="price-high">Сначала дорогие</option>
+                <option value="name">По алфавиту</option>
+            </select>
+        </div>
+
+        <div class="products" id="products-container">
+            <!-- Товары будут добавлены через JS -->
+        </div>
+    </div>
+
+    <div class="modal" id="cart-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🛒 Ваша корзина</h2>
+                <span class="close-btn" onclick="closeCart()">&times;</span>
+            </div>
+            <div id="cart-items">
+                <p>Корзина пуста</p>
+            </div>
+            <div class="cart-total" id="cart-total"></div>
+            <button class="checkout-btn" onclick="checkout()">Оформить заказ</button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">Товар добавлен в корзину!</div>
+
+    <footer>
+        <p>&copy; 2024 Детский Мир. Все права защищены.</p>
+        <p>📞 +7 (999) 123-45-67 | 📧 info@kids-shop.ru</p>
+    </footer>
+
+    <script>
+        const products = [
+            { id: 1, name: "Платье принцессы", category: "girls", price: 2500, emoji: "👗" },
+            { id: 2, name: "Комбинезон мишка", category: "babies", price: 3200, emoji: "🧸" },
+            { id: 3, name: "Футболка супергерой", category: "boys", price: 1200, emoji: "🦸" },
+            { id: 4, name: "Юбка балерины", category: "girls", price: 1800, emoji: "🩰" },
+            { id: 5, name: "Костюм динозавра", category: "boys", price: 2800, emoji: "🦕" },
+            { id: 6, name: "Боди зайчик", category: "babies", price: 1500, emoji: "🐰" },
+            { id: 7, name: "Плащ дождик", category: "boys", price: 2100, emoji: "☔" },
+            { id: 8, name: "Сарафан цветочек", category: "girls", price: 1900, emoji: "🌸" },
+            { id: 9, name: "Пижама котик", category: "babies", price: 1600, emoji: "🐱" },
+            { id: 10, name: "Шорты ковбой", category: "boys", price: 1400, emoji: "🤠" },
+            { id: 11, name: "Туфельки золушки", category: "girls", price: 2200, emoji: "👠" },
+            { id: 12, name: "Шапочка пчелка", category: "babies", price: 800, emoji: "🐝" }
+        ];
+
+        let cart = [];
+        let currentFilter = 'all';
+
+        function renderProducts(productsToRender) {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            productsToRender.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">${product.emoji}</div>
+                    <div class="product-info">
+                        <div class="product-category">${getCategoryName(product.category)}</div>
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">${product.price} ₽</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">В корзину</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function getCategoryName(category) {
+            const names = {
+                'boys': 'Для мальчиков',
+                'girls': 'Для девочек',
+                'babies': 'Для малышей'
+            };
+            return names[category] || category;
+        }
+
+        function filterProducts(category) {
+            currentFilter = category;
+            let filtered = category === 'all' 
+                ? products 
+                : products.filter(p => p.category === category);
+            
+            sortProducts(filtered);
+        }
+
+        function sortProducts(productsToSort = null) {
+            const sortValue = document.getElementById('sort-select').value;
+            let productsArray = productsToSort || 
+                (currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter));
+
+            switch(sortValue) {
+                case 'price-low':
+                    productsArray.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    productsArray.sort((a, b) => b.price - a.price);
+                    break;
+                case 'name':
+                    productsArray.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+            }
+
+            renderProducts(productsArray);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            updateCartCount();
+            showNotification();
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').textContent = cart.length;
+        }
+
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+
+        function openCart() {
+            const modal = document.getElementById('cart-modal');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Корзина пуста</p>';
+                cartTotal.innerHTML = '';
+            } else {
+                cartItems.innerHTML = '';
+                let total = 0;
+
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'cart-item';
+                    itemElement.innerHTML = `
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            ${item.price} ₽
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="background: #ff6b6b; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">✕</button>
+                    `;
+                    cartItems.appendChild(itemElement);
+                });
+
+                cartTotal.innerHTML = `Итого: ${total} ₽`;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeCart() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            openCart();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Корзина пуста!');
+                return;
+            }
+            alert(`Спасибо за заказ!\nТоваров: ${cart.length}\nСумма: ${cart.reduce((sum, item) => sum + item.price, 0)} ₽\n\nМенеджер свяжется с вами.`);
+            cart = [];
+            updateCartCount();
+            closeCart();
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            const modal = document.getElementById('cart-modal');
+            if (event.target === modal) {
+                closeCart();
+            }
+        }
+
+        // Инициализация
+        renderProducts(products);
+    </script>
+</body>
+</html>
